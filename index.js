@@ -18,6 +18,7 @@ module.exports = (babel) => {
             )[0] || null;*/
 
         let render;
+        let componentWillUnmount;
         let componentDidMount;
 
         for (var i in path.node.declarations[0].init.arguments[0].properties) {
@@ -25,6 +26,8 @@ module.exports = (babel) => {
             render = path.node.declarations[0].init.arguments[0].properties[i];
           } else if (path.node.declarations[0].init.arguments[0].properties[i].key.name === "componentDidMount") {
             componentDidMount = path.node.declarations[0].init.arguments[0].properties[i];
+          } else if (path.node.declarations[0].init.arguments[0].properties[i].key.name === "componentWillUnmount") {
+            componentWillUnmount = path.node.declarations[0].init.arguments[0].properties[i];
           }
         }
 
@@ -41,6 +44,19 @@ module.exports = (babel) => {
           blockStatement.push(
             template.statement(`useEffect(componentDidMount)`)()
           );
+        }
+
+        if (componentWillUnmount !== undefined) {
+          blockStatement.push(
+            t.functionDeclaration(
+              t.identifier("componentWillUnmount"),
+              [],
+              componentWillUnmount.body
+            )
+          );
+          blockStatement.push(
+            template.statement(`useEffect(() => () => componentWillUnmount)`)
+          )
         }
 
         blockStatement.push(

@@ -6,6 +6,10 @@ const Hey = React.createClass({
     console.log("b");
   },
 
+  componentWillUnmount() {
+    console.log("Hey component unmounted")
+  },
+
   render() {
     return <div>Hey!</div>;
   },
