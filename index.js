@@ -18,7 +18,6 @@ module.exports = (babel) => {
             )[0] || null;*/
 
         let render;
-        let constructor;
         let componentDidMount;
 
         for (var i in path.node.declarations[0].init.arguments[0].properties) {
